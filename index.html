@@ -284,6 +284,11 @@ const VH=540,VW_MIN=680,VW_MAX=1500;let W=0,H=0,DPR=1,SC=1,VW=960,offX=0,offY=0;
 function resize(){
   DPR=Math.min(2,window.devicePixelRatio||1);W=innerWidth;H=innerHeight;
   cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);
+  // Luôn ép kích thước hiển thị (CSS px) bằng đúng viewport, tách biệt với độ phân giải
+  // bộ đệm vẽ (DPR). Nếu chỉ dựa vào CSS "inset:0" thì ở một số trình duyệt/tỉ lệ scale
+  // máy (vd 125%/150% trên Windows, hoặc zoom trang) canvas có thể hiển thị to hơn khung
+  // nhìn thấy, khiến phần dưới (chỗ có ghe) bị trôi ra ngoài mà không scroll tới được.
+  cv.style.width=W+'px';cv.style.height=H+'px';
   // Bình thường khớp chiều cao, lấp đầy không viền đen; chỉ kẹp (và chừa viền) khi
   // tỷ lệ cửa sổ quá hẹp/quá dài, để ghe không bị phóng to tràn ra ngoài.
   VW=clamp(W*(VH/H),VW_MIN,VW_MAX);
