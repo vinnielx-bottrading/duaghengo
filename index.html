@@ -276,10 +276,13 @@ function save(){try{localStorage.setItem(SKEY,JSON.stringify(SAVE));}catch(e){}}
 
 /* ================== CANVAS ================== */
 const cv=document.getElementById('c'),ctx=cv.getContext('2d');
-const VH=540,VW=960;let W=0,H=0,DPR=1,SC=1,offX=0,offY=0;
+const VH=540,VW_MIN=680,VW_MAX=1500;let W=0,H=0,DPR=1,SC=1,VW=960,offX=0,offY=0;
 function resize(){
   DPR=Math.min(2,window.devicePixelRatio||1);W=innerWidth;H=innerHeight;
   cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);
+  // Bình thường khớp chiều cao, lấp đầy không viền đen; chỉ kẹp (và chừa viền) khi
+  // tỷ lệ cửa sổ quá hẹp/quá dài, để ghe không bị phóng to tràn ra ngoài.
+  VW=clamp(W*(VH/H),VW_MIN,VW_MAX);
   SC=Math.min(W/VW,H/VH);
   offX=(W-VW*SC)/2;offY=(H-VH*SC)/2;
   const portrait=H>W&&matchMedia('(pointer:coarse)').matches;
