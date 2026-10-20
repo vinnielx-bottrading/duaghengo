@@ -2,7 +2,11 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a0b06">
 <title>Ghe Ngo – Nhịp Chèo Đồng Lòng</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;800;900&display=swap" rel="stylesheet">
@@ -963,6 +967,8 @@ addEventListener('keydown',e=>{
 });
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseGame();});
 addEventListener('resize',resize);
+addEventListener('orientationchange',()=>{resize();setTimeout(resize,80);setTimeout(resize,300);});
+if(window.visualViewport){visualViewport.addEventListener('resize',resize);visualViewport.addEventListener('scroll',resize);}
 
 /* ================== VÒNG LẶP ================== */
 G.cloud=0;G.tw=0;let last=performance.now();
@@ -993,6 +999,11 @@ function drawScene(now){
 }
 window.__G=G;window.__tap=tap;window.__clock=clock;window.__start=startStage;
 resize();requestAnimationFrame(frame);
+// Khi mở từ icon màn hình chính (PWA/standalone) hoặc trong WebView, kích thước
+// cửa sổ đôi khi báo sai ngay lúc tải xong rồi mới ổn định — tính lại vài lần.
+[0,60,150,300,600,1200].forEach(ms=>setTimeout(resize,ms));
+addEventListener('pageshow',()=>{resize();setTimeout(resize,150);});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)resize();});
 </script>
 </body>
 </html>
